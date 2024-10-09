@@ -1,0 +1,80 @@
+.parent-container {
+    display: flex;
+    align-items: flex-start;  
+    justify-content: center;  
+    height: 100vh;  
+    background-color: #302f2f;  
+   
+}
+
+/* Wallet container styling */
+.wallet-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+    justify-content: center;
+    background: #1a1a1a;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: white;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+  /* Styling for the p tags (wallet info) */
+  .wallet-info {
+    background-color: #333;
+    padding: 10px 20px;
+    border-radius: 8px;
+    margin: 10px 0;
+    color: #f0f0f0;
+    font-size: 1rem;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+  }
+  
+  /* Styling for the buttons */
+  .wallet-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Connect Button */
+  .connect-btn {
+    background-color: #0066ff;
+    color: white;
+  }
+  
+  .connect-btn:hover {
+    background-color: #0044cc;
+  }
+  
+  /* Mint Button */
+  .mint-btn {
+    background-color: rgb(218, 9, 79);
+    color: white;
+  }
+  
+  .mint-btn:hover {
+    background-color: rgb(224, 107, 146);
+  }
+
+  .toast-link{
+    text-decoration: none;
+    color: palevioletred;
+  }
+  .toast-link:hover{
+    text-decoration: underline;
+  }
+  
