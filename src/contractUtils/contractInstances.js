@@ -6,7 +6,7 @@ import smartwalletAbi from "./abi/smartwallet.json";
 // List of contract addresses
 const entrypointAddress = "0xc8BAe8188F6AD53777Ca7773e588612fea246ded";
 const smartwalletAddress = "0xc67f29882d223C029c7f6D9C8453315C025fE0a3";
-const nftContractAddress = "0xD8F36D54544E91D5C40b92c7e495c8CdBf43f0ff";
+const nftContractAddress = "0x699F2ed718D9E82079b6d24a06424D5123DCf8c0";
 
 const BUNDLERS_KEY = process.env.REACT_APP_BUNDLERS_KEY;
 

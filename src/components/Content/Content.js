@@ -14,12 +14,13 @@ const Content = () => {
   const [walletAddress, setWalletAddress] = useState("");
   const [nftBalance, setNftBalance] = useState("loading...");
   const [isLoading, setIsLoading] = useState(false);
+  const [userNFTs, setUserNFTs] = useState([]);
 
   const showTransactionNotification = (txHash) => {
     const explorerUrl = `https://explorer.hekla.taiko.xyz/tx/${txHash}`;
     toast(
       <>
-        🚀 Transaction submitted! <br />
+        🚀 Transaction successful! <br />
         <a
           href={explorerUrl}
           target="_blank"
@@ -64,7 +65,7 @@ const Content = () => {
         [
           nftInstance.address,
           0,
-          nftInstance.interface.encodeFunctionData("mintNFT", [walletAddress]),
+          nftInstance.interface.encodeFunctionData("mint", [walletAddress]),
         ]
       );
 
@@ -108,7 +109,7 @@ const Content = () => {
       console.error("Error interacting with contracts:", error);
     } finally {
       setIsLoading(false);
-      await fetchBalance(walletAddress);
+      await fetchUserNFTs(walletAddress);
     }
   };
 
@@ -121,7 +122,7 @@ const Content = () => {
         const walletAddress = accounts[0];
         setWalletAddress(walletAddress);
         setIsConnected(true);
-        await fetchBalance(walletAddress);
+        await fetchUserNFTs(walletAddress);
       } catch (err) {
         console.error("Error connecting to MetaMask:", err);
       }
@@ -135,12 +136,12 @@ const Content = () => {
       if (accounts.length === 0) {
         setWalletAddress(null);
         setIsConnected(false);
-        setNftBalance(null);
+        setUserNFTs([]);
         console.log("MetaMask is locked or disconnected.");
       } else {
         const newAddress = accounts[0];
         setWalletAddress(newAddress);
-        await fetchBalance(newAddress);
+        await fetchUserNFTs(newAddress);
         console.log("Account changed:", newAddress);
       }
     };
@@ -148,7 +149,7 @@ const Content = () => {
     const handleDisconnect = () => {
       setWalletAddress(null);
       setIsConnected(false);
-      setNftBalance(null);
+      setUserNFTs([]);
       console.log("MetaMask disconnected or locked.");
     };
 
@@ -168,49 +169,76 @@ const Content = () => {
     };
   }, []);
 
-  const fetchBalance = async (wallet) => {
+  const fetchUserNFTs = async (walletAddress) => {
     try {
       const nftInstance = await getNftContractInstance();
-      const balance = await nftInstance.balanceOf(wallet);
-      setNftBalance(balance.toString());
+      const tokenIds = await nftInstance.tokensOfOwner(walletAddress);
+      setUserNFTs(tokenIds);
     } catch (err) {
-      console.error("Error fetching NFT balance:", err);
+      console.error("Error fetching NFTs:", err);
     }
   };
+
   return (
-    <div className="parent-container">
-      <div className="wallet-container">
-        {isConnected ? (
-          <>
-            <p className="wallet-info">Connected: {walletAddress}</p>
-            <p className="wallet-info">NFT Balance: {nftBalance}</p>
+    <>
+      <section className="hero-section">
+        <div className="hero-content">
+          <div className="text-content">
+            <h1 className="heading">Revolutionary NFT Minting on Taiko</h1>
+            <p className="subheading">
+              Powered by Account Abstraction for a Seamless and Gasless
+              Experience
+            </p>
 
-            {/* Conditionally show MINT button only when not loading */}
-            {!isLoading && (
-              <button className="wallet-btn mint-btn" onClick={mint}>
-                MINT
+            {/* Conditional rendering for the button and loader */}
+            {!isLoading ? (
+              <button
+                className="cta-button"
+                onClick={isConnected ? mint : connectWallet}
+              >
+                {isConnected ? "Start Minting Now" : "Connect MetaMask"}
               </button>
+            ) : (
+              <HashLoader
+                color={"#da094f"}
+                size={50}
+                cssOverride={{
+                  marginTop: "30px",
+                }}
+              />
             )}
-          </>
-        ) : (
-          <button className="wallet-btn connect-btn" onClick={connectWallet}>
-            Connect MetaMask
-          </button>
-        )}
 
-        <ToastContainer />
+            <ToastContainer />
+          </div>
 
-        {isLoading && (
-          <HashLoader
-            color={"#da094f"}
-            size={50}
-            cssOverride={{
-              marginTop: "30px",
-            }}
-          />
-        )}
-      </div>
-    </div>
+          <div className="image-content">
+            <img src="/taiko.png" alt="NFT Minting" className="hero-image" />
+          </div>
+        </div>
+      </section>
+
+      {/* Section to display user NFTs */}
+      <section className="nft-gallery">
+        <h1 className="heading">Your NFTs</h1>
+        <div className="nft-grid">
+          {userNFTs.length > 0 ? (
+            userNFTs
+              .slice()
+              .reverse()
+              .map((tokenId) => (
+                <div key={tokenId.toString()} className="nft-card">
+                  <img
+                    src={`https://gateway.pinata.cloud/ipfs/QmfRntAVjMJr2Sfqz1TS9C4MM4myjtFY2Puuhkb9LkRDRL/${tokenId}.png`}
+                    alt={`NFT ${tokenId}`}
+                  />
+                </div>
+              ))
+          ) : (
+            <h3>No NFTs found. Start minting</h3>
+          )}
+        </div>
+      </section>
+    </>
   );
 };
 
