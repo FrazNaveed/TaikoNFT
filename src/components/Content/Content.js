@@ -110,6 +110,7 @@ const Content = () => {
     } finally {
       setIsLoading(false);
       await fetchUserNFTs(walletAddress);
+      scrollToBottom();
     }
   };
 
@@ -168,6 +169,13 @@ const Content = () => {
       }
     };
   }, []);
+
+  const scrollToBottom = () => {
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: "smooth",
+    });
+  };
 
   const fetchUserNFTs = async (walletAddress) => {
     try {
